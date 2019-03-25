@@ -11,6 +11,11 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 
 class LoginView(APIView):
+    """
+        Login and create an session.
+        Examples:
+            http POST http://lhel.pythonanywhere.com/auth/login/ email=admin@celero.com.br password=celero2018
+    """
     permission_classes = (AllowAny,)
     authentication_classes = (SessionAuthentication, BasicAuthentication)
 

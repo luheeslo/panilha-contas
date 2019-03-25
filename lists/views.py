@@ -10,7 +10,14 @@ from .forms import RegisterForm
 
 class RegisterView(generics.ListAPIView):
 
-    """Docstring for RegisterView. """
+    """Get all registers.
+
+       Optional queries: order_by/sorted_by
+       Examples:
+           http://url:port/lists/registers
+           http://url:port/lists/registers/?order_by=name&sorted_by=a
+           http://url:port/lists/registers/?order_by=amount&sorted_by=d
+    """
     serializer_class = RegisterSerializer
 
     def get_queryset(self):
@@ -28,7 +35,14 @@ class RegisterView(generics.ListAPIView):
 
 class CreateRegisterView(APIView):
 
-    """Docstring for CreateRegisterView. """
+    """Create a register.
+       Type with value 1 == input
+       Type with value 2 == output
+       Examples:
+           http --form POST http://lhel.pythonanywhere.com/lists/create_register/ type=1 name=Teste2 amount=100.00 'Authorization: Token token_example'
+           httpie --form post http://url:port/lists/create_register type=2 name=Teste2 amount=100.00
+
+    """
 
     parser_classes = (MultiPartParser, FormParser,)
 
