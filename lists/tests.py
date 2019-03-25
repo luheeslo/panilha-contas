@@ -16,12 +16,20 @@ class TestLists(TestCase):
     """Test case docstring."""
 
     def setUp(self):
+        self.valid_payload = {
+            'email': 'test@test.com',
+            'password': 'mypassword',
+        }
+        User.objects.create_user('usertest', 'test@test.com', 'mypassword')
+        client.post(reverse('myauth:login'),
+                    data=json.dumps(self.valid_payload),
+                    content_type='application/json')
         Register.objects.create(name='Ventilador', amount=-149.0)
         Register.objects.create(name='Feira do mês', amount=-250.0)
         Register.objects.create(name='Pagamento do job', amount=4000.0)
 
     def test_register_list(self):
-        response = client.get(reverse('get_registers'))
+        response = client.get(reverse('lists:registers'))
         registers = Register.objects.all()
         serializer = RegisterSerializer(registers, many=True)
         self.assertEqual(response.data, serializer.data)
