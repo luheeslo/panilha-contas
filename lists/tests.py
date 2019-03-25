@@ -34,3 +34,33 @@ class TestLists(TestCase):
         serializer = RegisterSerializer(registers, many=True)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_register_list_order_by_name(self):
+        response = client.get(reverse('lists:registers'), {'order_by': 'name'})
+        registers = Register.objects.all().order_by("name")
+        serializer = RegisterSerializer(registers, many=True)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_register_list_order_by_amount(self):
+        response = client.get(reverse('lists:registers'), {'order_by': 'amount'})
+        registers = Register.objects.all().order_by("amount")
+        serializer = RegisterSerializer(registers, many=True)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_register_list_order_by_name_sort_by_desc(self):
+        response = client.get(reverse('lists:registers'),
+                              {'order_by': 'name', 'sort_by': 'd'})
+        registers = Register.objects.all().order_by("-name")
+        serializer = RegisterSerializer(registers, many=True)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_register_list_order_by_amount_sort_by_desc(self):
+        response = client.get(reverse('lists:registers'),
+                              {'order_by': 'amount', 'sort_by': 'd'})
+        registers = Register.objects.all().order_by("-amount")
+        serializer = RegisterSerializer(registers, many=True)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
