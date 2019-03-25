@@ -1,7 +1,11 @@
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.parsers import FormParser, MultiPartParser
 
 from .models import Register
 from .serializers import RegisterSerializer
+from .forms import RegisterForm
 
 
 class RegisterView(generics.ListAPIView):
@@ -20,3 +24,19 @@ class RegisterView(generics.ListAPIView):
                 return queryset.order_by("-" + order_by)
         else:
             return queryset
+
+
+class CreateRegisterView(APIView):
+
+    """Docstring for CreateRegisterView. """
+
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def post(self, request, format=None):
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            r = Register.objects.create(name=form.cleaned_data['name'],
+                                        amount=form.cleaned_data['amount'])
+            return Response(RegisterSerializer(r).data, status=201)
+        else:
+            return Response({'errors': form.errors}, status=400)
